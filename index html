@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="mg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Microtâche Mila Vola</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --danger: #e63946;
+            --warning: #f72585;
+            --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f8f9fc, #eef2f9);
+            min-height: 100vh;
+        }
+        
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .admin-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e9ecef;
+        }
+        
+        .admin-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--primary-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        .admin-table th {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .admin-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .admin-table tr:hover {
+            background-color: #e9ecef;
+        }
+        
+        .btn-admin {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn-confirm {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-reject {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-confirm:hover, .btn-reject:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .search-container {
+            margin-bottom: 1.5rem;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 0.85rem 1.25rem;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+            font-size: 1rem;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .login-screen {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 2.5rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+        }
+        
+        .login-logo {
+            margin-bottom: 2rem;
+        }
+        
+        .login-logo i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .access-code-input {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 2px solid #dee2e6;
+            font-size: 1.2rem;
+            text-align: center;
+            letter-spacing: 3px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .access-code-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .tab-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+        
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: #e9ecef;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            background: var(--success);
+            color: white;
+            box-shadow: var(--box-shadow);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-confirmed {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 10px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .tab-container {
+                flex-wrap: wrap;
+            }
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #adb5bd;
+        }
+    </style>
+</head>
+<body>
+    <!-- Écran de connexion -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-logo">
+            <i class="fas fa-lock"></i>
+            <h2>Admin Panel</h2>
+            <p>Microtâche Mila Vola</p>
+        </div>
+        
+        <div class="mb-3">
+            <input type="password" 
+                   id="accessCode" 
+                   class="access-code-input" 
+                   placeholder="Entrez le code d'accès"
+                   maxlength="6"
+                   autocomplete="off">
+        </div>
+        
+        <button id="loginBtn" class="btn btn-primary w-100" style="padding: 1rem; font-size: 1.1rem;">
+            <i class="fas fa-sign-in-alt me-2"></i> Accéder au panel admin
+        </button>
+        
+        <div class="mt-3 text-muted small">
+            Code d'accès requis: 080600
+        </div>
+    </div>
+
+    <!-- Panel Admin (caché par défaut) -->
+    <div id="adminPanel" class="admin-container" style="display: none;">
+        <div class="admin-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1><i class="fas fa-cog me-2"></i> Panel Admin</h1>
+                    <p class="mb-0">Microtâche Mila Vola - Gestion de la plateforme</p>
+                </div>
+                <button id="logoutBtn" class="btn btn-light">
+                    <i class="fas fa-sign-out-alt me-1"></i> Déconnexion
+                </button>
+            </div>
+        </div>
+
+        <!-- Statistiques -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalUsers">0</div>
+                <div class="stat-label">Utilisateurs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalDeposits">0</div>
+                <div class="stat-label">Dépôts en attente</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalWithdrawals">0</div>
+                <div class="stat-label">Retraits en attente</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalSubmissions">0</div>
+                <div class="stat-label">Preuves en attente</div>
+            </div>
+        </div>
+
+        <!-- Onglets -->
+        <div class="tab-container">
+            <button class="tab-btn active" data-tab="deposits">
+                <i class="fas fa-money-bill-wave me-1"></i> Dépôts
+            </button>
+            <button class="tab-btn" data-tab="withdrawals">
+                <i class="fas fa-hand-holding-usd me-1"></i> Retraits
+            </button>
+            <button class="tab-btn" data-tab="submissions">
+                <i class="fas fa-check-circle me-1"></i> Preuves
+            </button>
+            <button class="tab-btn" data-tab="users">
+                <i class="fas fa-users me-1"></i> Utilisateurs
+            </button>
+            <button class="tab-btn" data-tab="tasks">
+                <i class="fas fa-tasks me-1"></i> Tâches
+            </button>
+        </div>
+
+        <!-- Zone de recherche -->
+        <div class="search-container">
+            <input type="text" 
+                   id="searchInput" 
+                   class="search-input" 
+                   placeholder="Rechercher par nom, ID, montant...">
+        </div>
+
+        <!-- Contenu des onglets -->
+        <div id="tabContent">
+            <!-- Onglet Dépôts -->
+            <div class="tab-pane active" id="depositsTab">
+                <div class="admin-card">
+                    <h3 class="admin-title"><i class="fas fa-money-bill-wave me-2"></i> Demandes de Dépôt</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Utilisateur</th>
+                                <th>Montant</th>
+                                <th>Méthode</th>
+                                <th>Date</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="depositsTable">
+                            <tr>
+                                <td colspan="6" class="text-center py-4">
+                                    <div class="empty-state">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        <p>Chargement des dépôts...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Onglet Retraits -->
+            <div class="tab-pane" id="withdrawalsTab" style="display: none;">
+                <div class="admin-card">
+                    <h3 class="admin-title"><i class="fas fa-hand-holding-usd me-2"></i> Demandes de Retrait</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Utilisateur</th>
+                                <th>Téléphone</th>
+                                <th>Montant</th>
+                                <th>Frais</th>
+                                <th>Date</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="withdrawalsTable">
+                            <tr>
+                                <td colspan="7" class="text-center py-4">
+                                    <div class="empty-state">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        <p>Chargement des retraits...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Onglet Preuves -->
+            <div class="tab-pane" id="submissionsTab" style="display: none;">
+                <div class="admin-card">
+                    <h3 class="admin-title"><i class="fas fa-check-circle me-2"></i> Soumissions de Preuves</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Utilisateur</th>
+                                <th>Tâche</th>
+                                <th>Nom</th>
+                                <th>Date</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="submissionsTable">
+                            <tr>
+                                <td colspan="6" class="text-center py-4">
+                                    <div class="empty-state">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        <p>Chargement des preuves...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Onglet Utilisateurs -->
+            <div class="tab-pane" id="usersTab" style="display: none;">
+                <div class="admin-card">
+                    <h3 class="admin-title"><i class="fas fa-users me-2"></i> Liste des Utilisateurs</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>ID</th>
+                                <th>Gains</th>
+                                <th>Dépôt</th>
+                                <th>Bonus</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTable">
+                            <tr>
+                                <td colspan="7" class="text-center py-4">
+                                    <div class="empty-state">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        <p>Chargement des utilisateurs...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Onglet Tâches -->
+            <div class="tab-pane" id="tasksTab" style="display: none;">
+                <div class="admin-card">
+                    <h3 class="admin-title"><i class="fas fa-tasks me-2"></i> Tâches Actives</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Créateur</th>
+                                <th>Budget</th>
+                                <th>Participants</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tasksTable">
+                            <tr>
+                                <td colspan="6" class="text-center py-4">
+                                    <div class="empty-state">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        <p>Chargement des tâches...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Zone de notification -->
+        <div id="notificationArea" style="position: fixed; top: 20px; right: 20px; z-index: 1000;"></div>
+    </div>
+
+    <!-- Modal de confirmation -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="fas fa-check-circle me-2"></i> Confirmer l'action</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="confirmationMessage">Êtes-vous sûr de vouloir confirmer cette action ?</p>
+                    <div id="confirmationDetails" class="mb-3 p-3 bg-light rounded"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary" id="confirmActionBtn">Confirmer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de détails -->
+    <div class="modal fade" id="detailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="detailsModalTitle">Détails</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="detailsModalBody">
+                    <!-- Contenu chargé dynamiquement -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+        import { 
+            getFirestore, collection, getDocs, doc, updateDoc,
+            query, where, orderBy, deleteDoc, onSnapshot
+        } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+        // Configuration Firebase (identique à celle de l'application principale)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAC-P6WFH1kqfYQi3PdCWpy4LSUqvtX_vo",
+            authDomain: "mila-vola.firebaseapp.com",
+            projectId: "mila-vola",
+            storageBucket: "mila-vola.appspot.com",
+            messagingSenderId: "690624768352",
+            appId: "1:690624768352:web:668994ef2664c5b99dd605",
+            measurementId: "G-C3FZTKQHFP"
+        };
+
+        // Initialiser Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Variables globales
+        let currentAction = null;
+        let currentData = null;
+
+        // Éléments DOM
+        const loginScreen = document.getElementById('loginScreen');
+        const adminPanel = document.getElementById('adminPanel');
+        const accessCodeInput = document.getElementById('accessCode');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const searchInput = document.getElementById('searchInput');
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+
+        // Code d'accès admin
+        const ADMIN_CODE = '080600';
+
+        // Vérifier si l'admin est déjà connecté
+        function checkAdminLogin() {
+            const isAdminLogged = localStorage.getItem('milaVolaAdminLogged');
+            if (isAdminLogged === 'true') {
+                loginScreen.style.display = 'none';
+                adminPanel.style.display = 'block';
+                loadAdminData();
+            }
+        }
+
+        // Connexion admin
+        loginBtn.addEventListener('click', () => {
+            const code = accessCodeInput.value.trim();
+            if (code === ADMIN_CODE) {
+                localStorage.setItem('milaVolaAdminLogged', 'true');
+                loginScreen.style.display = 'none';
+                adminPanel.style.display = 'block';
+                showNotification('Connexion réussie!', 'success');
+                loadAdminData();
+            } else {
+                showNotification('Code d\'accès incorrect!', 'danger');
+                accessCodeInput.value = '';
+                accessCodeInput.focus();
+            }
+        });
+
+        // Déconnexion
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('milaVolaAdminLogged');
+            location.reload();
+        });
+
+        // Gestion des onglets
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Retirer la classe active de tous les boutons
+                tabBtns.forEach(b => b.classList.remove('active'));
+                // Ajouter la classe active au bouton cliqué
+                btn.classList.add('active');
+                
+                // Masquer tous les onglets
+                document.querySelectorAll('.tab-pane').forEach(pane => {
+                    pane.style.display = 'none';
+                });
+                
+                // Afficher l'onglet correspondant
+                const tabId = btn.getAttribute('data-tab');
+                document.getElementById(`${tabId}Tab`).style.display = 'block';
+                
+                // Recharger les données de l'onglet
+                loadTabData(tabId);
+            });
+        });
+
+        // Fonction pour charger les données admin
+        async function loadAdminData() {
+            try {
+                // Charger les statistiques
+                await loadStats();
+                
+                // Charger les données de l'onglet actif
+                const activeTab = document.querySelector('.tab-btn.active').getAttribute('data-tab');
+                loadTabData(activeTab);
+                
+                // Setup real-time listeners
+                setupRealtimeListeners();
+            } catch (error) {
+                console.error('Erreur lors du chargement des données admin:', error);
+                showNotification('Erreur de chargement des données', 'danger');
+            }
+        }
+
+        // Charger les statistiques
+        async function loadStats() {
+            try {
+                // Compter les utilisateurs
+                const usersSnapshot = await getDocs(collection(db, 'users'));
+                document.getElementById('totalUsers').textContent = usersSnapshot.size;
+                
+                // Compter les dépôts en attente
+                const depositsQuery = query(collection(db, 'depot_requests'), where('status', '==', 'en attente'));
+                const depositsSnapshot = await getDocs(depositsQuery);
+                document.getElementById('totalDeposits').textContent = depositsSnapshot.size;
+                
+                // Compter les retraits en attente
+                const withdrawalsQuery = query(collection(db, 'retrait_requests'), where('status', '==', 'en attente'));
+                const withdrawalsSnapshot = await getDocs(withdrawalsQuery);
+                document.getElementById('totalWithdrawals').textContent = withdrawalsSnapshot.size;
+                
+                // Compter les preuves en attente
+                const submissionsQuery = query(collection(db, 'submissions'), where('status', '==', 'en attente'));
+                const submissionsSnapshot = await getDocs(submissionsQuery);
+                document.getElementById('totalSubmissions').textContent = submissionsSnapshot.size;
+            } catch (error) {
+                console.error('Erreur lors du chargement des statistiques:', error);
+            }
+        }
+
+        // Charger les données d'un onglet spécifique
+        async function loadTabData(tabId) {
+            switch(tabId) {
+                case 'deposits':
+                    await loadDeposits();
+                    break;
+                case 'withdrawals':
+                    await loadWithdrawals();
+                    break;
+                case 'submissions':
+                    await loadSubmissions();
+                    break;
+                case 'users':
+                    await loadUsers();
+                    break;
+                case 'tasks':
+                    await loadTasks();
+                    break;
+            }
+        }
+
+        // Charger les dépôts
+        async function loadDeposits() {
+            try {
+                const depositsQuery = query(collection(db, 'depot_requests'), orderBy('createdAt', 'desc'));
+                const snapshot = await getDocs(depositsQuery);
+                
+                const tableBody = document.getElementById('depositsTable');
+                tableBody.innerHTML = '';
+                
+                if (snapshot.empty) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-center py-4">
+                                <div class="empty-state">
+                                    <i class="fas fa-inbox"></i>
+                                    <p>Aucune demande de dépôt</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const date = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleDateString('fr-FR') : 'N/A';
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="user-avatar me-2">
+                                    ${data.userName ? data.userName.charAt(0).toUpperCase() : 'U'}
+                                </div>
+                                <div>
+                                    <div class="fw-bold">${data.userName || 'Utilisateur inconnu'}</div>
+                                    <small class="text-muted">${data.userId || ''}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="fw-bold">${data.montant || 0} Ar</td>
+                        <td>${data.method || 'Non spécifié'}</td>
+                        <td>${date}</td>
+                        <td>
+                            <span class="status-badge status-${data.status || 'pending'}">
+                                ${data.status || 'en attente'}
+                            </span>
+                        </td>
+                        <td>
+                            ${data.status === 'en attente' ? `
+                                <button class="btn-admin btn-confirm me-2" onclick="confirmDeposit('${doc.id}', '${data.userId}', ${data.montant})">
+                                    <i class="fas fa-check"></i> Confirmer
+                                </button>
+                                <button class="btn-admin btn-reject" onclick="rejectRequest('depot_requests', '${doc.id}')">
+                                    <i class="fas fa-times"></i> Rejeter
+                                </button>
+                            ` : `
+                                <span class="text-muted">Traité</span>
+                            `}
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Erreur lors du chargement des dépôts:', error);
+                showNotification('Erreur de chargement des dépôts', 'danger');
+            }
+        }
+
+        // Charger les retraits
+        async function loadWithdrawals() {
+            try {
+                const withdrawalsQuery = query(collection(db, 'retrait_requests'), orderBy('createdAt', 'desc'));
+                const snapshot = await getDocs(withdrawalsQuery);
+                
+                const tableBody = document.getElementById('withdrawalsTable');
+                tableBody.innerHTML = '';
+                
+                if (snapshot.empty) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="text-center py-4">
+                                <div class="empty-state">
+                                    <i class="fas fa-inbox"></i>
+                                    <p>Aucune demande de retrait</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const date = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleDateString('fr-FR') : 'N/A';
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="user-avatar me-2">
+                                    ${data.userName ? data.userName.charAt(0).toUpperCase() : 'U'}
+                                </div>
+                                <div>
+                                    <div class="fw-bold">${data.nom || data.userName || 'Utilisateur inconnu'}</div>
+                                    <small class="text-muted">${data.userId || ''}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${data.phone || 'Non spécifié'}</td>
+                        <td class="fw-bold">${data.montant || 0} Ar</td>
+                        <td>${data.frais || 0} Ar</td>
+                        <td>${date}</td>
+                        <td>
+                            <span class="status-badge status-${data.status || 'pending'}">
+                                ${data.status || 'en attente'}
+                            </span>
+                        </td>
+                        <td>
+                            ${data.status === 'en attente' ? `
+                                <button class="btn-admin btn-confirm me-2" onclick="confirmWithdrawal('${doc.id}', '${data.userId}', ${data.montant}, ${data.frais || 0})">
+                                    <i class="fas fa-check"></i> Confirmer
+                                </button>
+                                <button class="btn-admin btn-reject" onclick="rejectRequest('retrait_requests', '${doc.id}')">
+                                    <i class="fas fa-times"></i> Rejeter
+                                </button>
+                            ` : `
+                                <span class="text-muted">Traité</span>
+                            `}
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Erreur lors du chargement des retraits:', error);
+                showNotification('Erreur de chargement des retraits', 'danger');
+            }
+        }
+
+        // Charger les soumissions de preuves
+        async function loadSubmissions() {
+            try {
+                const submissionsQuery = query(collection(db, 'submissions'), orderBy('createdAt', 'desc'));
+                const snapshot = await getDocs(submissionsQuery);
+                
+                const tableBody = document.getElementById('submissionsTable');
+                tableBody.innerHTML = '';
+                
+                if (snapshot.empty) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-center py-4">
+                                <div class="empty-state">
+                                    <i class="fas fa-inbox"></i>
+                                    <p>Aucune soumission de preuve</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const date = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleDateString('fr-FR') : 'N/A';
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="user-avatar me-2">
+                                    ${data.userName ? data.userName.charAt(0).toUpperCase() : 'U'}
+                                </div>
+                                <div>
+                                    <div class="fw-bold">${data.userName || 'Utilisateur inconnu'}</div>
+                                    <small class="text-muted">${data.userId || ''}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <small class="text-muted">${data.taskId ? data.taskId.substring(0, 8) + '...' : 'N/A'}</small>
+                        </td>
+                        <td>${data.name || 'Non spécifié'}</td>
+                        <td>${date}</td>
+                        <td>
+                            <span class="status-badge status-${data.status || 'pending'}">
+                                ${data.status || 'en attente'}
+                            </span>
+                        </td>
+                        <td>
+                            ${data.status === 'en attente' ? `
+                                <button class="btn-admin btn-confirm me-2" onclick="confirmSubmission('${doc.id}')">
+                                    <i class="fas fa-check"></i> Confirmer
+                                </button>
+                                <button class="btn-admin btn-reject" onclick="rejectRequest('submissions', '${doc.id}')">
+                                    <i class="fas fa-times"></i> Rejeter
+                                </button>
+                                <button class="btn-admin btn-info mt-1" onclick="viewProofDetails('${doc.id}')">
+                                    <i class="fas fa-eye"></i> Voir
+                                </button>
+                            ` : `
+                                <button class="btn-admin btn-info" onclick="viewProofDetails('${doc.id}')">
+                                    <i class="fas fa-eye"></i> Détails
+                                </button>
+                            `}
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Erreur lors du chargement des soumissions:', error);
+                showNotification('Erreur de chargement des soumissions', 'danger');
+            }
+        }
+
+        // Charger les utilisateurs
+        async function loadUsers() {
+            try {
+                const usersQuery = query(collection(db, 'users'), orderBy('createdAt', 'desc'));
+                const snapshot = await getDocs(usersQuery);
+                
+                const tableBody = document.getElementById('usersTable');
+                tableBody.innerHTML = '';
+                
+                if (snapshot.empty) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="text-center py-4">
+                                <div class="empty-state">
+                                    <i class="fas fa-users"></i>
+                                    <p>Aucun utilisateur</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const date = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleDateString('fr-FR') : 'N/A';
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="user-avatar me-2">
+                                    ${data.name ? data.name.charAt(0).toUpperCase() : 'U'}
+                                </div>
+                                <div>
+                                    <div class="fw-bold">${data.name || 'Utilisateur inconnu'}</div>
+                                    <small class="text-muted">${data.isAdmin ? 'Admin' : 'Utilisateur'}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td><small class="text-muted">${doc.id.substring(0, 8)}...</small></td>
+                        <td class="fw-bold">${data.gain || 0} Ar</td>
+                        <td>${data.depot || 0} Ar</td>
+                        <td>${data.bonus || 0} Ar</td>
+                        <td>${date}</td>
+                        <td>
+                            <button class="btn-admin btn-info" onclick="viewUserDetails('${doc.id}')">
+                                <i class="fas fa-eye"></i> Détails
+                            </button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Erreur lors du chargement des utilisateurs:', error);
+                showNotification('Erreur de chargement des utilisateurs', 'danger');
+            }
+        }
+
+        // Charger les tâches
+        async function loadTasks() {
+            try {
+                const tasksQuery = query(collection(db, 'tasks'), orderBy('createdAt', 'desc'));
+                const snapshot = await getDocs(tasksQuery);
+                
+                const tableBody = document.getElementById('tasksTable');
+                tableBody.innerHTML = '';
+                
+                if (snapshot.empty) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-center py-4">
+                                <div class="empty-state">
+                                    <i class="fas fa-tasks"></i>
+                                    <p>Aucune tâche</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const budget = data.budgetPerParticipant || data.budget || 0;
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            <div class="fw-bold">${data.description ? data.description.substring(0, 50) + '...' : 'Pas de description'}</div>
+                            <small class="text-muted">${data.taskType || 'Type inconnu'}</small>
+                        </td>
+                        <td>${data.publisherName || 'Inconnu'}</td>
+                        <td class="fw-bold">${budget} Ar</td>
+                        <td>${data.completedCount || 0}</td>
+                        <td>
+                            <span class="status-badge ${data.status === 'active' ? 'status-confirmed' : 'status-rejected'}">
+                                ${data.status || 'inactive'}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn-admin btn-info" onclick="viewTaskDetails('${doc.id}')">
+                                <i class="fas fa-eye"></i> Détails
+                            </button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Erreur lors du chargement des tâches:', error);
+                showNotification('Erreur de chargement des tâches', 'danger');
+            }
+        }
+
+        // Fonction pour confirmer un dépôt
+        window.confirmDeposit = async (depositId, userId, amount) => {
+            currentAction = 'confirmDeposit';
+            currentData = { depositId, userId, amount };
+            
+            document.getElementById('confirmationMessage').textContent = 
+                `Êtes-vous sûr de vouloir confirmer ce dépôt de ${amount} Ar ?`;
+            
+            document.getElementById('confirmationDetails').innerHTML = `
+                <div><strong>ID Dépôt:</strong> ${depositId.substring(0, 8)}...</div>
+                <div><strong>ID Utilisateur:</strong> ${userId}</div>
+                <div><strong>Montant:</strong> ${amount} Ar</div>
+            `;
+            
+            confirmationModal.show();
+        };
+
+        // Fonction pour confirmer un retrait
+        window.confirmWithdrawal = async (withdrawalId, userId, amount, fees) => {
+            currentAction = 'confirmWithdrawal';
+            currentData = { withdrawalId, userId, amount, fees };
+            
+            document.getElementById('confirmationMessage').textContent = 
+                `Êtes-vous sûr de vouloir confirmer ce retrait de ${amount} Ar ?`;
+            
+            document.getElementById('confirmationDetails').innerHTML = `
+                <div><strong>ID Retrait:</strong> ${withdrawalId.substring(0, 8)}...</div>
+                <div><strong>ID Utilisateur:</strong> ${userId}</div>
+                <div><strong>Montant:</strong> ${amount} Ar</div>
+                <div><strong>Frais:</strong> ${fees} Ar</div>
+            `;
+            
+            confirmationModal.show();
+        };
+
+        // Fonction pour confirmer une soumission
+        window.confirmSubmission = async (submissionId) => {
+            currentAction = 'confirmSubmission';
+            currentData = { submissionId };
+            
+            document.getElementById('confirmationMessage').textContent = 
+                'Êtes-vous sûr de vouloir confirmer cette soumission de preuve ?';
+            
+            document.getElementById('confirmationDetails').innerHTML = `
+                <div><strong>ID Soumission:</strong> ${submissionId.substring(0, 8)}...</div>
+            `;
+            
+            confirmationModal.show();
+        };
+
+        // Fonction pour rejeter une demande
+        window.rejectRequest = async (collectionName, requestId) => {
+            currentAction = 'rejectRequest';
+            currentData = { collectionName, requestId };
+            
+            document.getElementById('confirmationMessage').textContent = 
+                'Êtes-vous sûr de vouloir rejeter cette demande ?';
+            
+            document.getElementById('confirmationDetails').innerHTML = `
+                <div><strong>Collection:</strong> ${collectionName}</div>
+                <div><strong>ID Demande:</strong> ${requestId.substring(0, 8)}...</div>
+            `;
+            
+            confirmationModal.show();
+        };
+
+        // Gestionnaire de confirmation d'action
+        document.getElementById('confirmActionBtn').addEventListener('click', async () => {
+            try {
+                confirmationModal.hide();
+                
+                switch(currentAction) {
+                    case 'confirmDeposit':
+                        await confirmDepositAction(currentData.depositId, currentData.userId, currentData.amount);
+                        break;
+                    case 'confirmWithdrawal':
+                        await confirmWithdrawalAction(currentData.withdrawalId, currentData.userId, currentData.amount, currentData.fees);
+                        break;
+                    case 'confirmSubmission':
+                        await confirmSubmissionAction(currentData.submissionId);
+                        break;
+                    case 'rejectRequest':
+                        await rejectRequestAction(currentData.collectionName, currentData.requestId);
+                        break;
+                }
+                
+                showNotification('Action effectuée avec succès!', 'success');
+                loadAdminData(); // Recharger les données
+            } catch (error) {
+                console.error('Erreur lors de l\'action:', error);
+                showNotification('Erreur lors de l\'action: ' + error.message, 'danger');
+            }
+        });
+
+        // Action de confirmation de dépôt
+        async function confirmDepositAction(depositId, userId, amount) {
+            const depositRef = doc(db, 'depot_requests', depositId);
+            const userRef = doc(db, 'users', userId);
+            
+            // Mettre à jour le statut du dépôt
+            await updateDoc(depositRef, {
+                status: 'confirmé',
+                confirmedAt: new Date()
+            });
+            
+            // Récupérer les données utilisateur
+            const userSnap = await getDocs(query(collection(db, 'users'), where('__name__', '==', userId)));
+            if (!userSnap.empty) {
+                const userData = userSnap.docs[0].data();
+                await updateDoc(userRef, {
+                    depot: (userData.depot || 0) + amount
+                });
+            }
+        }
+
+        // Action de confirmation de retrait
+        async function confirmWithdrawalAction(withdrawalId, userId, amount, fees) {
+            const withdrawalRef = doc(db, 'retrait_requests', withdrawalId);
+            const userRef = doc(db, 'users', userId);
+            
+            // Mettre à jour le statut du retrait
+            await updateDoc(withdrawalRef, {
+                status: 'confirmé',
+                confirmedAt: new Date()
+            });
+            
+            // Récupérer les données utilisateur
+            const userSnap = await getDocs(query(collection(db, 'users'), where('__name__', '==', userId)));
+            if (!userSnap.empty) {
+                const userData = userSnap.docs[0].data();
+                const totalAmount = amount + fees;
+                if (userData.gain >= totalAmount) {
+                    await updateDoc(userRef, {
+                        gain: (userData.gain || 0) - totalAmount
+                    });
+                } else {
+                    throw new Error('Solde insuffisant');
+                }
+            }
+        }
+
+        // Action de confirmation de soumission
+        async function confirmSubmissionAction(submissionId) {
+            const submissionRef = doc(db, 'submissions', submissionId);
+            
+            // Mettre à jour le statut de la soumission
+            await updateDoc(submissionRef, {
+                status: 'confirmé',
+                confirmedAt: new Date()
+            });
+        }
+
+        // Action de rejet
+        async function rejectRequestAction(collectionName, requestId) {
+            const requestRef = doc(db, collectionName, requestId);
+            
+            await updateDoc(requestRef, {
+                status: 'rejeté',
+                rejectedAt: new Date(),
+                rejectionReason: 'Rejeté par l\'administrateur'
+            });
+        }
+
+        // Fonction pour voir les détails d'une preuve
+        window.viewProofDetails = async (submissionId) => {
+            try {
+                const submissionRef = doc(db, 'submissions', submissionId);
+                const submissionSnap = await getDocs(query(collection(db, 'submissions'), where('__name__', '==', submissionId)));
+                
+                if (!submissionSnap.empty) {
+                    const data = submissionSnap.docs[0].data();
+                    
+                    document.getElementById('detailsModalTitle').textContent = 'Détails de la preuve';
+                    document.getElementById('detailsModalBody').innerHTML = `
+                        <div class="mb-3">
+                            <h6>Informations utilisateur</h6>
+                            <p><strong>Nom:</strong> ${data.name || 'Non spécifié'}</p>
+                            <p><strong>Utilisateur:</strong> ${data.userName || 'Inconnu'} (${data.userId || 'N/A'})</p>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6>Informations tâche</h6>
+                            <p><strong>ID Tâche:</strong> ${data.taskId || 'N/A'}</p>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6>Preuve soumise</h6>
+                            <div class="p-3 bg-light rounded">
+                                ${data.proof ? data.proof.replace(/\n/g, '<br>') : 'Aucune preuve fournie'}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6>Statut</h6>
+                            <span class="status-badge status-${data.status || 'pending'}">
+                                ${data.status || 'en attente'}
+                            </span>
+                        </div>
+                        
+                        ${data.createdAt ? `
+                            <div class="mb-3">
+                                <h6>Date de soumission</h6>
+                                <p>${new Date(data.createdAt.seconds * 1000).toLocaleString('fr-FR')}</p>
+                            </div>
+                        ` : ''}
+                    `;
+                    
+                    detailsModal.show();
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement des détails:', error);
+                showNotification('Erreur de chargement des détails', 'danger');
+            }
+        };
+
+        // Fonction pour voir les détails d'un utilisateur
+        window.viewUserDetails = async (userId) => {
+            try {
+                const userSnap = await getDocs(query(collection(db, 'users'), where('__name__', '==', userId)));
+                
+                if (!userSnap.empty) {
+                    const data = userSnap.docs[0].data();
+                    
+                    document.getElementById('detailsModalTitle').textContent = 'Détails utilisateur';
+                    document.getElementById('detailsModalBody').innerHTML = `
+                        <div class="mb-3">
+                            <h6>Informations personnelles</h6>
+                            <p><strong>Nom:</strong> ${data.name || 'Non spécifié'}</p>
+                            <p><strong>ID:</strong> ${userId}</p>
+                            <p><strong>Statut:</strong> ${data.isAdmin ? 'Administrateur' : 'Utilisateur'}</p>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6>Soldes</h6>
+                            <p><strong>Gains:</strong> ${data.gain || 0} Ar</p>
+                            <p><strong>Dépôt:</strong> ${data.depot || 0} Ar</p>
+                            <p><strong>Bonus:</strong> ${data.bonus || 0} Ar</p>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6>Parrainage</h6>
+                            <p><strong>Parrain:</strong> ${data.referrer || 'Aucun'}</p>
+                            <p><strong>Filleuls:</strong> ${data.referrals ? data.referrals.length : 0}</p>
+                        </div>
+                        
+                        ${data.createdAt ? `
+                            <div class="mb-3">
+                                <h6>Date d'inscription</h6>
+                                <p>${new Date(data.createdAt.seconds * 1000).toLocaleDateString('fr-FR')}</p>
+                            </div>
+                        ` : ''}
+                    `;
+                    
+                    detailsModal.show();
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement des détails:', error);
+                showNotification('Erreur de chargement des détails', 'danger');
+            }
+        };
+
+        // Fonction pour voir les détails d'une tâche
+        window.viewTaskDetails = async (taskId) => {
+            try {
+                const taskSnap = await getDocs(query(collection(db, 'tasks'), where('__name__', '==', taskId)));
+                
+                if (!taskSnap.empty) {
+                    const data = taskSnap.docs[0].data();
+                    const budget = data.budgetPerParticipant || data.budget || 0;
+                    
+                    document.getElementById('detailsModalTitle').textContent = 'Détails de la tâche';
+                    document.getElementById('detailsModalBody').innerHTML = `
+                        <div class="mb-3">
+                            <h6>Description</h6>
+                            <p>${data.description || 'Pas de description'}</p>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <h6>Informations générales</h6>
+                                <p><strong>Type:</strong> ${data.taskType || 'Non spécifié'}</p>
+                                <p><strong>Budget:</strong> ${budget} Ar par participant</p>
+                                <p><strong>Participants:</strong> ${data.completedCount || 0}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Créateur</h6>
+                                <p><strong>Nom:</strong> ${data.publisherName || 'Inconnu'}</p>
+                                <p><strong>ID:</strong> ${data.publisher || 'N/A'}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6>URL/Lien</h6>
+                            <p><a href="${data.url || '#'}" target="_blank">${data.url || 'Non spécifié'}</a></p>
+                        </div>
+                        
+                        ${data.cond ? `
+                            <div class="mb-3">
+                                <h6>Conditions</h6>
+                                <p>${data.cond}</p>
+                            </div>
+                        ` : ''}
+                        
+                        <div class="mb-3">
+                            <h6>Statut</h6>
+                            <span class="status-badge ${data.status === 'active' ? 'status-confirmed' : 'status-rejected'}">
+                                ${data.status || 'inactive'}
+                            </span>
+                        </div>
+                    `;
+                    
+                    detailsModal.show();
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement des détails:', error);
+                showNotification('Erreur de chargement des détails', 'danger');
+            }
+        };
+
+        // Setup real-time listeners
+        function setupRealtimeListeners() {
+            // Écouter les nouvelles demandes de dépôt
+            const depositsQuery = query(collection(db, 'depot_requests'), where('status', '==', 'en attente'));
+            onSnapshot(depositsQuery, (snapshot) => {
+                document.getElementById('totalDeposits').textContent = snapshot.size;
+                // Recharger l'onglet dépôts si actif
+                const activeTab = document.querySelector('.tab-btn.active').getAttribute('data-tab');
+                if (activeTab === 'deposits') {
+                    loadDeposits();
+                }
+            });
+            
+            // Écouter les nouvelles demandes de retrait
+            const withdrawalsQuery = query(collection(db, 'retrait_requests'), where('status', '==', 'en attente'));
+            onSnapshot(withdrawalsQuery, (snapshot) => {
+                document.getElementById('totalWithdrawals').textContent = snapshot.size;
+                const activeTab = document.querySelector('.tab-btn.active').getAttribute('data-tab');
+                if (activeTab === 'withdrawals') {
+                    loadWithdrawals();
+                }
+            });
+            
+            // Écouter les nouvelles soumissions
+            const submissionsQuery = query(collection(db, 'submissions'), where('status', '==', 'en attente'));
+            onSnapshot(submissionsQuery, (snapshot) => {
+                document.getElementById('totalSubmissions').textContent = snapshot.size;
+                const activeTab = document.querySelector('.tab-btn.active').getAttribute('data-tab');
+                if (activeTab === 'submissions') {
+                    loadSubmissions();
+                }
+            });
+        }
+
+        // Fonction d'affichage de notification
+        function showNotification(message, type) {
+            const notificationArea = document.getElementById('notificationArea');
+            const notification = document.createElement('div');
+            notification.className = `notification bg-${type === 'success' ? 'success' : type === 'danger' ? 'danger' : 'warning'}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'danger' ? 'exclamation-circle' : 'exclamation-triangle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            notificationArea.appendChild(notification);
+            
+            // Supprimer la notification après 3 secondes
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Recherche
+        searchInput.addEventListener('input', () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            const activeTab = document.querySelector('.tab-btn.active').getAttribute('data-tab');
+            
+            let tableBody;
+            switch(activeTab) {
+                case 'deposits':
+                    tableBody = document.getElementById('depositsTable');
+                    break;
+                case 'withdrawals':
+                    tableBody = document.getElementById('withdrawalsTable');
+                    break;
+                case 'submissions':
+                    tableBody = document.getElementById('submissionsTable');
+                    break;
+                case 'users':
+                    tableBody = document.getElementById('usersTable');
+                    break;
+                case 'tasks':
+                    tableBody = document.getElementById('tasksTable');
+                    break;
+            }
+            
+            if (tableBody) {
+                const rows = tableBody.getElementsByTagName('tr');
+                for (let row of rows) {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(searchTerm) ? '' : 'none';
+                }
+            }
+        });
+
+        // Vérifier la connexion au chargement
+        checkAdminLogin();
+
+        // Focus sur le champ de code
+        accessCodeInput.focus();
+    </script>
+</body>
+</html>
